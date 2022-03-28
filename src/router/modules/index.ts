@@ -1,7 +1,7 @@
 // 静态路由
 import homeRouter from "./home";
-import errorRouter from "./error";
 import remainingRouter from "./remaining";
+import shopRouter from "./shop";
 import { RouteRecordRaw, RouteComponent } from "vue-router";
 
 import {
@@ -12,7 +12,7 @@ import {
 import { buildHierarchyTree } from "/@/utils/tree";
 
 // 原始静态路由（未做任何处理）
-const routes = [homeRouter, errorRouter];
+const routes = [homeRouter, shopRouter];
 
 // 导出处理后的静态路由（三级及以上的路由全部拍成二级）
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(

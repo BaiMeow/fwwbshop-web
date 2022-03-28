@@ -50,7 +50,7 @@ export default [
       } else {
         return {
           code: 0,
-          info: [setDifAuthority("v-test", permissionRouter)]
+          info: [setDifAuthority("v-user", permissionRouter)]
         };
       }
     }

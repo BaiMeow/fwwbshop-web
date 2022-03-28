@@ -14,6 +14,17 @@ const remainingRouter = [
     }
   },
   {
+    path: "/register",
+    name: "register",
+    component: () => import("/@/views/register.vue"),
+    meta: {
+      title: $t("menus.hsregister"),
+      showLink: false,
+      i18n: true,
+      rank: 102
+    }
+  },
+  {
     path: "/redirect",
     component: Layout,
     meta: {

@@ -114,9 +114,9 @@ function resetRouter(): void {
 }
 
 // 初始化路由
-function initRouter(name: string) {
+function initRouter() {
   return new Promise(resolve => {
-    getAsyncRoutes({ name }).then(({ info }) => {
+    getAsyncRoutes().then(({ info }) => {
       if (info.length === 0) {
         usePermissionStoreHook().changeSetting(info);
       } else {

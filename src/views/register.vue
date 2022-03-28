@@ -5,36 +5,25 @@ import { addClass, removeClass } from "/@/utils/operate";
 import bg from "/@/assets/login/bg.png";
 import avatar from "/@/assets/login/avatar.svg?component";
 import illustration from "/@/assets/login/illustration.svg?component";
-import { getLogin } from "../api/user";
-import { successMessage, errorMessage, warnMessage } from "/@/utils/message";
-import { initRouter } from "/@/router/utils";
-import { storageSession } from "/@/utils/storage";
-
+import { http } from "/@/utils/http";
+import { errorMessage, successMessage } from "../utils/message";
 const router = useRouter();
 
 let user = ref("");
 let pwd = ref("");
+let phone = ref("");
 
-const onLogin = (): void => {
-  storageSession.setItem("info", {
+const onRegister = (): void => {
+  let registerForm = {
     username: user.value,
-    accessToken: "eyJhbGciOiJIUzUxMiJ9.test"
-  });
-  initRouter().then(() => {});
-  router.push("/");
-  getLogin({ username: user.value, password: pwd.value })
-    .then((resp: string) => {
-      if (resp == "") {
-        successMessage("登陆成功");
-        storageSession.setItem("info", {
-          username: user.value,
-          accessToken: "eyJhbGciOiJIUzUxMiJ9.test"
-        });
-        initRouter().then(() => {});
-        router.push("/");
-      } else {
-        warnMessage("登陆失败" + resp);
-      }
+    phone: user.value,
+    password: pwd.value
+  };
+  http
+    .request("post", "/api/auth/register", { data: registerForm })
+    .then(() => {
+      successMessage("注册成功");
+      router.push("/login");
     })
     .catch(err => {
       errorMessage(err.toString());
@@ -57,6 +46,15 @@ function onPwdFocus() {
 function onPwdBlur() {
   if (pwd.value.length === 0)
     removeClass(document.querySelector(".pwd"), "focus");
+}
+
+function onPhoneFocus() {
+  addClass(document.querySelector(".phone"), "focus");
+}
+
+function onPhoneBlur() {
+  if (pwd.value.length === 0)
+    removeClass(document.querySelector(".phone"), "focus");
 }
 </script>
 
@@ -83,7 +81,7 @@ function onPwdBlur() {
             }
           }"
         >
-          理财秒杀
+          注册
         </h2>
         <div
           class="input-group user focus"
@@ -104,13 +102,42 @@ function onPwdBlur() {
             <IconifyIconOffline icon="fa-user" width="14" height="14" />
           </div>
           <div>
-            <h5>用户名</h5>
+            <h5>姓名</h5>
             <input
               type="text"
               class="input"
               v-model="user"
               @focus="onUserFocus"
               @blur="onUserBlur"
+            />
+          </div>
+        </div>
+        <div
+          class="input-group phone focus"
+          v-motion
+          :initial="{
+            opacity: 0,
+            y: 100
+          }"
+          :enter="{
+            opacity: 1,
+            y: 0,
+            transition: {
+              delay: 300
+            }
+          }"
+        >
+          <div class="icon">
+            <IconifyIconOffline icon="fa-phone" width="14" height="14" />
+          </div>
+          <div>
+            <h5>手机号</h5>
+            <input
+              type="text"
+              class="input"
+              v-model="phone"
+              @focus="onPhoneFocus"
+              @blur="onPhoneBlur"
             />
           </div>
         </div>
@@ -157,9 +184,9 @@ function onPwdBlur() {
               delay: 400
             }
           }"
-          @click="onLogin"
+          @click="onRegister"
         >
-          登录
+          注册
         </button>
       </div>
     </div>
