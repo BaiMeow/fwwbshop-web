@@ -12,15 +12,17 @@ const router = useRouter();
 let user = ref("");
 let pwd = ref("");
 let phone = ref("");
+let id_card = ref("");
 
 const onRegister = (): void => {
-  let registerForm = {
-    username: user.value,
-    phone: user.value,
+  const params = new URLSearchParams({
+    name: user.value,
+    phone_num: phone.value,
+    id_card: id_card.value,
     password: pwd.value
-  };
+  });
   http
-    .request("post", "/api/auth/register", { data: registerForm })
+    .request("post", "/api/register", { data: params.toString() })
     .then(() => {
       successMessage("注册成功");
       router.push("/login");
@@ -39,6 +41,15 @@ function onUserBlur() {
     removeClass(document.querySelector(".user"), "focus");
 }
 
+function onIdCardFocus() {
+  addClass(document.querySelector(".id_card"), "focus");
+}
+
+function onIdCardBlur() {
+  if (id_card.value.length === 0)
+    removeClass(document.querySelector(".id-card"), "focus");
+}
+
 function onPwdFocus() {
   addClass(document.querySelector(".pwd"), "focus");
 }
@@ -53,7 +64,7 @@ function onPhoneFocus() {
 }
 
 function onPhoneBlur() {
-  if (pwd.value.length === 0)
+  if (phone.value.length === 0)
     removeClass(document.querySelector(".phone"), "focus");
 }
 </script>
@@ -138,6 +149,35 @@ function onPhoneBlur() {
               v-model="phone"
               @focus="onPhoneFocus"
               @blur="onPhoneBlur"
+            />
+          </div>
+        </div>
+        <div
+          class="input-group id-card focus"
+          v-motion
+          :initial="{
+            opacity: 0,
+            y: 100
+          }"
+          :enter="{
+            opacity: 1,
+            y: 0,
+            transition: {
+              delay: 300
+            }
+          }"
+        >
+          <div class="icon">
+            <IconifyIconOffline icon="fa-address-card" width="14" height="14" />
+          </div>
+          <div>
+            <h5>身份证号</h5>
+            <input
+              type="text"
+              class="input"
+              v-model="id_card"
+              @focus="onIdCardFocus"
+              @blur="onIdCardBlur"
             />
           </div>
         </div>

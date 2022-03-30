@@ -12,8 +12,12 @@ export const getVerify = (): userType => {
 };
 
 // 登录
-export const getLogin = (data: object) => {
-  return http.request("post", "/auth/login", { data });
+export const getLogin = ({ phone_num, password }) => {
+  const params = new URLSearchParams({
+    phone_num: phone_num,
+    password: password
+  });
+  return http.request("post", "/api/login", { data: params.toString() });
 };
 
 // 刷新token

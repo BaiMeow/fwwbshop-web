@@ -20,8 +20,7 @@ const shopRouter = {
       meta: {
         title: $t("menus.hsitemdetail"),
         showLink: false,
-        i18n: true,
-        refreshRedirect: "/shop"
+        i18n: true
       }
     },
     {
@@ -29,10 +28,9 @@ const shopRouter = {
       component: () => import("/@/views/shop/index.vue"),
       name: "items",
       meta: {
-        title: $t("menus.hsshop"),
+        title: $t("menus.hsshoplist"),
         showLink: false,
-        i18n: true,
-        refreshRedirect: "/shop"
+        i18n: true
       }
     }
   ]

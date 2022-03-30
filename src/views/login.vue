@@ -9,31 +9,27 @@ import { getLogin } from "../api/user";
 import { successMessage, errorMessage, warnMessage } from "/@/utils/message";
 import { initRouter } from "/@/router/utils";
 import { storageSession } from "/@/utils/storage";
+import Cookies from "js-cookie";
 
 const router = useRouter();
 
-let user = ref("");
+let phone_num = ref("");
 let pwd = ref("");
 
 const onLogin = (): void => {
-  storageSession.setItem("info", {
-    username: user.value,
-    accessToken: "eyJhbGciOiJIUzUxMiJ9.test"
-  });
-  initRouter().then(() => {});
-  router.push("/");
-  getLogin({ username: user.value, password: pwd.value })
-    .then((resp: string) => {
-      if (resp == "") {
+  getLogin({ phone_num: phone_num.value, password: pwd.value })
+    .then(({ msg, name, status, token }) => {
+      if (status == 0) {
         successMessage("登陆成功");
+        Cookies.set("token", token);
         storageSession.setItem("info", {
-          username: user.value,
-          accessToken: "eyJhbGciOiJIUzUxMiJ9.test"
+          username: name,
+          accessToken: token
         });
         initRouter().then(() => {});
         router.push("/");
       } else {
-        warnMessage("登陆失败" + resp);
+        warnMessage("登陆失败" + msg);
       }
     })
     .catch(err => {
@@ -41,13 +37,13 @@ const onLogin = (): void => {
     });
 };
 
-function onUserFocus() {
-  addClass(document.querySelector(".user"), "focus");
+function onPhoneFocus() {
+  addClass(document.querySelector(".phone"), "focus");
 }
 
-function onUserBlur() {
-  if (user.value.length === 0)
-    removeClass(document.querySelector(".user"), "focus");
+function onPhoneBlur() {
+  if (phone_num.value.length === 0)
+    removeClass(document.querySelector(".phone"), "focus");
 }
 
 function onPwdFocus() {
@@ -86,7 +82,7 @@ function onPwdBlur() {
           理财秒杀
         </h2>
         <div
-          class="input-group user focus"
+          class="input-group phone focus"
           v-motion
           :initial="{
             opacity: 0,
@@ -101,16 +97,16 @@ function onPwdBlur() {
           }"
         >
           <div class="icon">
-            <IconifyIconOffline icon="fa-user" width="14" height="14" />
+            <IconifyIconOffline icon="fa-phone" width="14" height="14" />
           </div>
           <div>
-            <h5>用户名</h5>
+            <h5>手机号</h5>
             <input
               type="text"
               class="input"
-              v-model="user"
-              @focus="onUserFocus"
-              @blur="onUserBlur"
+              v-model="phone_num"
+              @focus="onPhoneFocus"
+              @blur="onPhoneBlur"
             />
           </div>
         </div>

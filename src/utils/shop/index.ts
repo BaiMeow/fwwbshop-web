@@ -26,3 +26,8 @@ export function formatTimeDuring(dur: number) {
   str += parseInt(dur) + "秒";
   return str;
 }
+
+export function formatTime(t: number) {
+  const time = new Date(t * 1000);
+  return time.toLocaleString();
+}

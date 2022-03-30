@@ -26,7 +26,7 @@ const defaultConfig: AxiosRequestConfig = {
   timeout: 10000,
   headers: {
     Accept: "application/json, text/plain, */*",
-    "Content-Type": "application/json",
+    "Content-Type": "application/x-www-form-urlencoded",
     "X-Requested-With": "XMLHttpRequest"
   },
   // 数组格式参数序列化
