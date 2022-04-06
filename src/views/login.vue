@@ -9,32 +9,53 @@ import { getLogin } from "../api/user";
 import { successMessage, errorMessage, warnMessage } from "/@/utils/message";
 import { initRouter } from "/@/router/utils";
 import { storageSession } from "/@/utils/storage";
+import { http } from "/@/utils/http";
 import Cookies from "js-cookie";
 
 const router = useRouter();
 
 let phone_num = ref("");
 let pwd = ref("");
+let isAdmin = ref(false);
+
+let loginHandler = ({ msg, name, status, token }) => {
+  if (status == 0) {
+    successMessage("登陆成功");
+    Cookies.set("token", token);
+    storageSession.setItem("info", {
+      username: name,
+      accessToken: token
+    });
+    initRouter().then(() => {});
+    router.push("/");
+  } else {
+    warnMessage("登陆失败" + msg);
+  }
+};
 
 const onLogin = (): void => {
-  getLogin({ phone_num: phone_num.value, password: pwd.value })
-    .then(({ msg, name, status, token }) => {
-      if (status == 0) {
-        successMessage("登陆成功");
-        Cookies.set("token", token);
-        storageSession.setItem("info", {
-          username: name,
-          accessToken: token
-        });
-        initRouter().then(() => {});
-        router.push("/");
-      } else {
-        warnMessage("登陆失败" + msg);
-      }
-    })
-    .catch(err => {
-      errorMessage(err.toString());
-    });
+  //管理员登陆
+  if (isAdmin.value) {
+    let params = new URLSearchParams();
+    params.append("phone_num", phone_num.value);
+    params.append("password", pwd.value);
+    params.append("isAdmin", "false");
+    http
+      .post("/api/login/admin", {
+        data: params.toString()
+      })
+      .then(loginHandler)
+      .catch(err => {
+        errorMessage(err.toString());
+      });
+  } else {
+    //用户登陆
+    getLogin({ phone_num: phone_num.value, password: pwd.value })
+      .then(loginHandler)
+      .catch(err => {
+        errorMessage(err.toString());
+      });
+  }
 };
 
 function onPhoneFocus() {
@@ -139,24 +160,29 @@ function onPwdBlur() {
             />
           </div>
         </div>
-        <button
-          class="btn"
-          v-motion
-          :initial="{
-            opacity: 0,
-            y: 10
-          }"
-          :enter="{
-            opacity: 1,
-            y: 0,
-            transition: {
-              delay: 400
-            }
-          }"
-          @click="onLogin"
-        >
-          登录
-        </button>
+        <div class="login-admin">
+          <el-checkbox label="管理员登陆" v-model="isAdmin" />
+        </div>
+        <div>
+          <button
+            class="btn"
+            v-motion
+            :initial="{
+              opacity: 0,
+              y: 10
+            }"
+            :enter="{
+              opacity: 1,
+              y: 0,
+              transition: {
+                delay: 400
+              }
+            }"
+            @click="onLogin"
+          >
+            登录
+          </button>
+        </div>
       </div>
     </div>
   </div>

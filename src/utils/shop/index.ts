@@ -27,7 +27,7 @@ export function formatTimeDuring(dur: number) {
   return str;
 }
 
-export function formatTime(t: number) {
+export function FormatTime(t: number) {
   const time = new Date(t * 1000);
   return time.toLocaleString();
 }

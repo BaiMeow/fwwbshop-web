@@ -89,11 +89,13 @@ import faLock from "@iconify-icons/fa/lock";
 import faSignOut from "@iconify-icons/fa/sign-out";
 import faPhone from "@iconify-icons/fa/phone";
 import faAddressCard from "@iconify-icons/fa/address-card";
+import faCalendar from "@iconify-icons/fa/calendar";
 addIcon("fa-user", faUser);
 addIcon("fa-lock", faLock);
 addIcon("fa-sign-out", faSignOut);
 addIcon("fa-phone", faPhone);
 addIcon("fa-address-card", faAddressCard);
+addIcon("fa-calendar", faCalendar);
 
 // Iconify Icon在Vue里离线使用（用于内网环境）https://docs.iconify.design/icon-components/vue/offline.html
 export default defineComponent({

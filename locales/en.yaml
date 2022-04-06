@@ -37,3 +37,7 @@ menus:
   hsshoplist: Item List
   hsadmin: Admin
   hsdashborad: Dashboard
+  hsitemadmin: Item Admin
+  hsitemedit: Edit Item
+  hsrules: Rules Config
+  hsruleadd: Rule Add

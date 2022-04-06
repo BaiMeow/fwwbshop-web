@@ -34,6 +34,18 @@ import {
   ElCollapseItem,
   ElDialog,
   ElCard,
+  ElTable,
+  ElTableColumn,
+  ElCheckbox,
+  ElDescriptions,
+  ElDescriptionsItem,
+  ElSpace,
+  ElForm,
+  ElFormItem,
+  ElDatePicker,
+  ElTimePicker,
+  ElSelect,
+  ElOption,
   // 指令
   ElLoading,
   ElInfiniteScroll
@@ -76,7 +88,19 @@ const components = [
   ElCollapse,
   ElCollapseItem,
   ElDialog,
-  ElCard
+  ElCard,
+  ElTable,
+  ElTableColumn,
+  ElCheckbox,
+  ElDescriptions,
+  ElDescriptionsItem,
+  ElSpace,
+  ElForm,
+  ElFormItem,
+  ElDatePicker,
+  ElTimePicker,
+  ElSelect,
+  ElOption
 ];
 
 export function useElementPlus(app: App) {

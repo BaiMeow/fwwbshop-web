@@ -39,3 +39,7 @@ menus:
   hsadmin: 管理
   hsdashboard: 仪表盘
   hsorderquery: 订单查询
+  hsitemadmin: 商品管理
+  hsitemedit: 编辑商品
+  hsrules: 规则配置
+  hsruleadd: 规则添加

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { http } from "/@/utils/http";
-import { formatTimeDuring, formatTime, item } from "/@/utils/shop";
+import { formatTimeDuring, FormatTime, item } from "/@/utils/shop";
 import { ref } from "vue";
+import { successMessage } from "/@/utils/message";
 
 const route = useRoute();
-const id = route.query?.id ?? -1;
+const id = route.query?.id;
 
 let good = ref({
   price: 1,
@@ -38,8 +39,10 @@ setInterval(() => {
 function buy() {
   http.get("/api/shop/item/getUrl?id=" + id).then(({ md5 }) => {
     http
-      .post("/api/shop/item/execution/", { params: { md5: md5, itemId: id } })
-      .then();
+      .post("/api/shop/item/execution/", { params: { md5: md5 } })
+      .then((resp: string) => {
+        successMessage(resp);
+      });
   });
 }
 </script>
@@ -50,8 +53,8 @@ function buy() {
       <h1>{{ good.name }}</h1>
       <el-divider />
       <div>{{ good.detail }}</div>
-      <div>秒杀开始时间:{{ formatTime(good.beginDate) }}</div>
-      <div>秒杀结束时间:{{ formatTime(good.endDate) }}</div>
+      <div>秒杀开始时间:{{ FormatTime(good.beginDate) }}</div>
+      <div>秒杀结束时间:{{ FormatTime(good.endDate) }}</div>
       <div>秒杀状态:{{ TimeOfShop }}</div>
       <el-button @click="buy" type="primary" size="large">秒杀</el-button>
     </el-card>

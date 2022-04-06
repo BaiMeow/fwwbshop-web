@@ -219,3 +219,8 @@ a:hover {
     justify-content: center;
   }
 }
+
+.login-admin {
+  float: right;
+  margin-bottom: 10px;
+}

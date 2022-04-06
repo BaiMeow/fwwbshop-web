@@ -443,8 +443,9 @@ nextTick(() => {
 
     <el-divider />
     <el-button
+      class="exit"
       type="danger"
-      style="width: 90%; margin: 24px 15px"
+      style="width: 90%; margin: 24px 15px 50px"
       @click="onReset"
     >
       <IconifyIconOffline

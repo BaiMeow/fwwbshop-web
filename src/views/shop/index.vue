@@ -4,8 +4,10 @@ import { ElNotification } from "element-plus";
 import { http } from "/@/utils/http";
 import { useMultiTagsStoreHook } from "/@/store/modules/multiTags";
 import { ref } from "vue";
+const router = useRouter();
+const route = useRoute();
 
-export interface item {
+interface item {
   price: number;
   id: number;
   name: string;
@@ -15,26 +17,12 @@ export interface item {
   beginDate: number;
   endDate: number;
 }
-const router = useRouter();
-const route = useRoute();
 
-let items = ref([
-  {
-    price: 1,
-    id: 1,
-    name: "1",
-    stock: 1,
-    description: "1",
-    detail: "1",
-    beginDate: 1,
-    endDate: 1
-  }
-]);
+let items = ref([]);
 
 http
   .get("/api/shop/itemlist")
-  .then(resp => {
-    console.log(resp);
+  .then((resp: Array<item>) => {
     items.value = resp;
   })
   .catch(function (error) {
@@ -44,7 +32,7 @@ http
       type: "error"
     });
     setTimeout(function () {
-      //router.push("/login");
+      router.push("/login");
     }, 3000);
   });
 
@@ -97,61 +85,21 @@ function toDetail(ItemId: number, ItemName: string) {
           }
         }"
       >
-        <el-space>
-          <el-card
-            shadow="hover"
-            :header="item.name"
-            @click="toDetail(item.id, item.name)"
-            class="item"
-          >
-            <div>{{ item.description }}</div>
-            <div>
-              <p>存货:{{ item.stock }}</p>
-            </div>
-            <div>秒杀开始时间:{{ FormattTime(item.beginDate) }}</div>
-          </el-card>
-        </el-space>
+        <el-card
+          shadow="hover"
+          :header="item.name"
+          @click="toDetail(item.id, item.name)"
+          class="item"
+        >
+          <div>{{ item.description }}</div>
+          <div>
+            <p>存货:{{ item.stock }}</p>
+          </div>
+          <div>秒杀开始时间:{{ FormattTime(item.beginDate) }}</div>
+        </el-card>
       </el-col>
     </el-row>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.item {
-  left: 10px;
-}
-
-.main-content {
-  margin: 0 !important;
-}
-
-.list {
-  height: 100%;
-
-  .top-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 60px;
-    background: #fff;
-
-    .left-mark {
-      display: flex;
-      align-items: center;
-
-      img {
-        display: block;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 10px;
-        cursor: pointer;
-      }
-
-      span {
-        font-size: 14px;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>
