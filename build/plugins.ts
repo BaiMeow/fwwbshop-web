@@ -14,7 +14,7 @@ import removeConsole from "vite-plugin-remove-console";
 import themePreprocessorPlugin from "@pureadmin/theme";
 
 export function getPluginsList(command, VITE_LEGACY) {
-  const prodMock = true;
+  const prodMock = false;
   const lifecycle = process.env.npm_lifecycle_event;
   return [
     vue(),

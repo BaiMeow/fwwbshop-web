@@ -42,23 +42,23 @@ onMounted(() => {
         good.value = resp;
         good.value.beginDate *= 1000;
         good.value.endDate *= 1000;
-        rules.value.forEach(rule => {
-          rule.children = [];
-          http
-            .get("/api/admin/rule/list", { params: { type: rule.name } })
-            .then((resp: Array<any>) => {
-              rule.children = resp;
-            })
-            .catch(err => {
-              errorMessage(err.respone.data);
-            });
-          rule.chosen = good.value["rule_" + rule.name];
-        });
       })
       .catch(err => {
         errorMessage(err.toString());
       });
   }
+  rules.value.forEach(rule => {
+    rule.children = [];
+    http
+      .get("/api/admin/rule/list", { params: { type: rule.name } })
+      .then((resp: Array<any>) => {
+        rule.children = resp;
+      })
+      .catch(err => {
+        errorMessage(err.respone.data);
+      });
+    rule.chosen = good.value["rule_" + rule.name];
+  });
 });
 const FormatId = (id: number) => {
   if (id == -1) {

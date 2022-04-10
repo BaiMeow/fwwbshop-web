@@ -72,7 +72,7 @@ const query = () => {
   if (selectedItem.value != 0) {
     params["item_id"] = selectedItem.value;
   }
-  if (timerange.value != null) {
+  if (timerange.value != null && timerange.value.length == 2) {
     params["beginDate"] = Math.floor(timerange.value[0].valueOf() / 1000);
     params["endDate"] = Math.floor(timerange.value[1].valueOf() / 1000);
   }

@@ -113,7 +113,7 @@ const add = () => {
   }
   console.log(requestData);
   http
-    .post("/api/rule/add", { data: requestData }, requestConfig)
+    .post("/api/admin/rule/add", { data: requestData }, requestConfig)
     .then(resp => {
       successMessage(resp.toString());
     })
