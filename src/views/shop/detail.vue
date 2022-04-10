@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { http } from "/@/utils/http";
 import { formatTimeDuring, FormatTime } from "/@/utils/shop";
 import { ref, computed } from "vue";
 import { errorMessage, successMessage } from "/@/utils/message";
 
+const router = useRouter();
 const route = useRoute();
 const id = route.query?.id;
 
@@ -53,6 +54,9 @@ function buy() {
     })
     .catch(error => {
       errorMessage("秒杀失败:" + error.response.data);
+      if (error.response.status == 520) {
+        router.push("/myshop/info");
+      }
     });
 }
 let disabled = computed(() => {
