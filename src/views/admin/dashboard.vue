@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import { http } from "/@/utils/http";
+import { ref, onMounted } from "vue";
+import { errorMessage } from "/@/utils/message";
+let bankbalance = ref(0);
+onMounted(() => {
+  http
+    .get("/api/admin/bankbalance")
+    .then((resp: number) => {
+      bankbalance.value = resp;
+    })
+    .catch((err: any) => {
+      errorMessage(err.respone.data);
+    });
+});
+</script>
 <template>
   <div>
     <el-row :gutter="24">
@@ -10,12 +26,10 @@
         style="margin-bottom: 20px"
       >
         <el-card>
-          正在秒杀
-          <el-table border style="margin-top: 20px">
-            <el-table-column label="id" />
-            <el-table-column label="商品名称" />
-            <el-table-column label="库存" />
-          </el-table>
+          银行账户
+          <el-form
+            ><el-form-item label="资产">{{ bankbalance }}</el-form-item>
+          </el-form>
         </el-card> </el-col
       ><el-col
         :xs="24"

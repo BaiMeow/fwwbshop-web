@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { item } from "/@/utils/shop";
 import { http } from "/@/utils/http";
 import { ref, onMounted } from "vue";
 import { successMessage, errorMessage } from "/@/utils/message";
@@ -10,20 +9,51 @@ let good = ref({
   price: 0,
   id: -1,
   name: "",
-  stock: 0,
+  totalstock: 0,
   description: "",
   detail: "",
   beginDate: 0,
-  endDate: 0
+  endDate: 0,
+  rule_age: 1,
+  rule_income: 1
 });
+let rules = ref([
+  {
+    name: "age",
+    show: "年龄",
+    children: [],
+    chosen: -1
+  },
+  {
+    name: "income",
+    show: "月收入",
+    children: [],
+    chosen: -1
+  }
+]);
+let activeRule = ref("");
 onMounted(() => {
   if (id == "-1") {
     good.value.name = "新商品";
   } else {
     http
       .get("/api/shop/item?id=" + id)
-      .then((resp: item) => {
+      .then((resp: any) => {
         good.value = resp;
+        good.value.beginDate *= 1000;
+        good.value.endDate *= 1000;
+        rules.value.forEach(rule => {
+          rule.children = [];
+          http
+            .get("/api/admin/rule/list", { params: { type: rule.name } })
+            .then((resp: Array<any>) => {
+              rule.children = resp;
+            })
+            .catch(err => {
+              errorMessage(err.respone.data);
+            });
+          rule.chosen = good.value["rule_" + rule.name];
+        });
       })
       .catch(err => {
         errorMessage(err.toString());
@@ -41,11 +71,14 @@ const submit = () => {
     id: good.value.id.toString(),
     price: good.value.price.toString(),
     name: good.value.name.toString(),
-    stock: good.value.stock.toString(),
+    totalstock: good.value.totalstock.toString(),
     description: good.value.description,
     detail: good.value.detail,
     beginDate: Math.floor(good.value.beginDate / 1000).toString(),
     endDate: Math.floor(good.value.endDate / 1000).toString()
+  });
+  rules.value.forEach(rule => {
+    params.append("rule_" + rule.name, rule.chosen + "");
   });
   var path;
   if (id == "-1") {
@@ -74,7 +107,7 @@ const submit = () => {
           <el-input v-model="good.name" />
         </el-form-item>
         <el-form-item label="理财库存">
-          <el-input v-model="good.stock" />
+          <el-input v-model="good.totalstock" />
         </el-form-item>
         <el-form-item label="理财单价">
           <el-input v-model="good.price">
@@ -106,6 +139,27 @@ const submit = () => {
             v-model="good.endDate"
           />
         </el-form-item>
+        <el-form-item label="规则配置"
+          ><el-collapse v-model="activeRule" accordion class="rules">
+            <el-collapse-item
+              v-for="rule in rules"
+              :title="rule.show"
+              :name="rule.name"
+              :key="rule.name"
+            >
+              <el-radio-group v-model="rule.chosen">
+                <el-radio
+                  v-for="child in rule.children"
+                  :key="child.id"
+                  :label="child.id"
+                  border
+                  class="rules-item"
+                  >{{ child.name }}</el-radio
+                >>
+              </el-radio-group>
+            </el-collapse-item>
+          </el-collapse></el-form-item
+        >
         <el-form-item>
           <el-button type="primary" @click="submit">提交</el-button>
         </el-form-item>
@@ -113,3 +167,12 @@ const submit = () => {
     </el-card>
   </div>
 </template>
+<style lang="scss" scoped>
+.rules {
+  width: 100%;
+}
+
+.rules-item {
+  margin-top: 20px;
+}
+</style>

@@ -46,6 +46,7 @@ import {
   ElTimePicker,
   ElSelect,
   ElOption,
+  ElProgress,
   // 指令
   ElLoading,
   ElInfiniteScroll
@@ -100,7 +101,8 @@ const components = [
   ElDatePicker,
   ElTimePicker,
   ElSelect,
-  ElOption
+  ElOption,
+  ElProgress
 ];
 
 export function useElementPlus(app: App) {

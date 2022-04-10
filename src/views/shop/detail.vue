@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { http } from "/@/utils/http";
-import { formatTimeDuring, FormatTime, item } from "/@/utils/shop";
-import { ref } from "vue";
-import { successMessage } from "/@/utils/message";
+import { formatTimeDuring, FormatTime } from "/@/utils/shop";
+import { ref, computed } from "vue";
+import { errorMessage, successMessage } from "/@/utils/message";
 
 const route = useRoute();
 const id = route.query?.id;
@@ -13,6 +13,7 @@ let good = ref({
   id: 1,
   name: "1",
   stock: 1,
+  totalstock: 1,
   description: "1",
   detail: "1",
   beginDate: 1,
@@ -20,7 +21,7 @@ let good = ref({
 });
 let TimeOfShop = ref("");
 
-http.get("/api/shop/item?id=" + id).then((resp: item) => {
+http.get("/api/shop/item?id=" + id).then((resp: any) => {
   good.value = resp;
 });
 setInterval(() => {
@@ -37,14 +38,33 @@ setInterval(() => {
 }, 1000);
 
 function buy() {
-  http.get("/api/shop/item/getUrl?id=" + id).then(({ md5 }) => {
-    http
-      .post("/api/shop/item/execution/", { params: { md5: md5 } })
-      .then((resp: string) => {
-        successMessage(resp);
-      });
-  });
+  http
+    .get("/api/shop/item/getUrl?id=" + id)
+    .then(({ md5 }) => {
+      http
+        .post("/api/shop/item/execution/", { params: { md5: md5 } })
+        .then((resp: string) => {
+          successMessage(resp);
+        })
+        .catch(error => {
+          errorMessage("秒杀失败:" + error.response.data);
+          return;
+        });
+    })
+    .catch(error => {
+      errorMessage("秒杀失败:" + error.response.data);
+    });
 }
+let disabled = computed(() => {
+  let t = new Date();
+  if (
+    t.valueOf() / 1000 < good.value.beginDate ||
+    t.valueOf() / 1000 > good.value.endDate
+  ) {
+    return true;
+  }
+  return false;
+});
 </script>
 
 <template>
@@ -52,11 +72,23 @@ function buy() {
     <el-card>
       <h1>{{ good.name }}</h1>
       <el-divider />
-      <div>{{ good.detail }}</div>
-      <div>秒杀开始时间:{{ FormatTime(good.beginDate) }}</div>
-      <div>秒杀结束时间:{{ FormatTime(good.endDate) }}</div>
-      <div>秒杀状态:{{ TimeOfShop }}</div>
-      <el-button @click="buy" type="primary" size="large">秒杀</el-button>
+      <el-progress
+        type="circle"
+        :percentage="
+          Math.floor(100 * ((good.totalstock - good.stock) / good.totalstock))
+        "
+      >
+        {{ good.totalstock - good.stock }} / {{ good.totalstock }}
+      </el-progress>
+      <div v-html="good.detail" />
+      <div>
+        秒杀时间:{{ FormatTime(good.beginDate) }} -
+        {{ FormatTime(good.endDate) }}
+      </div>
+      <div>{{ TimeOfShop }}</div>
+      <el-button @click="buy" type="primary" size="large" :disabled="disabled"
+        >秒杀</el-button
+      >
     </el-card>
   </div>
 </template>

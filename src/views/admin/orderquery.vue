@@ -42,7 +42,7 @@ let form = computed(() => {
   }
   return f;
 });
-let timerange = ref([new Date(), new Date()]);
+let timerange = ref([]);
 http
   .get("/api/admin/orderlist")
   .then((resp: Array<order>) => {
@@ -68,7 +68,24 @@ function getItem(id: number) {
   return null;
 }
 const query = () => {
-  http.get("/api/admin/orderlist");
+  let params = {};
+  if (selectedItem.value != 0) {
+    params["item_id"] = selectedItem.value;
+  }
+  if (timerange.value != null) {
+    params["beginDate"] = Math.floor(timerange.value[0].valueOf() / 1000);
+    params["endDate"] = Math.floor(timerange.value[1].valueOf() / 1000);
+  }
+  http
+    .get("/api/admin/orderlist", {
+      params: params
+    })
+    .then((resp: Array<order>) => {
+      orders.value = resp;
+    })
+    .catch(err => {
+      errorMessage("查询失败：" + err.toString());
+    });
 };
 function OrderDetail() {
   console.log(this);

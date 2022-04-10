@@ -11,7 +11,6 @@ import { initRouter } from "/@/router/utils";
 import { storageSession } from "/@/utils/storage";
 import { http } from "/@/utils/http";
 import Cookies from "js-cookie";
-
 const router = useRouter();
 
 let phone_num = ref("");
@@ -31,6 +30,10 @@ let loginHandler = ({ msg, name, status, token }) => {
   } else {
     warnMessage("登陆失败" + msg);
   }
+};
+
+const jumpRegister = (): void => {
+  router.push("/register");
 };
 
 const onLogin = (): void => {
@@ -161,7 +164,12 @@ function onPwdBlur() {
           </div>
         </div>
         <div class="login-admin">
-          <el-checkbox label="管理员登陆" v-model="isAdmin" />
+          <a class="register-link" @click="jumpRegister">注册</a>
+          <el-checkbox
+            label="管理员登陆"
+            v-model="isAdmin"
+            class="login-button"
+          />
         </div>
         <div>
           <button

@@ -1,3 +1,4 @@
+<script setup lang="ts"></script>
 <template>
   <div class="welcome">
     <el-row :gutter="24" style="margin: 20px">

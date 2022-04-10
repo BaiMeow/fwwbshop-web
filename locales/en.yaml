@@ -32,7 +32,8 @@ menus:
   permissionButton: Button Permission
   hsshop: Shop
   hsmyshop: My Shop
-  hsbought: Bought
+  hsmyorder: My Order
+  hsmyorderdetail: My Order Detail
   hsdashboard: Dashboard
   hsshoplist: Item List
   hsadmin: Admin

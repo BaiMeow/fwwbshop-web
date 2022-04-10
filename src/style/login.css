@@ -223,4 +223,17 @@ a:hover {
 .login-admin {
   float: right;
   margin-bottom: 10px;
+  width: 100%;
+}
+
+.register-link {
+  flex: auto;
+  float: left;
+  margin-top: 5px;
+  margin-left: 10px;
+}
+
+.login-button {
+  float: right;
+  margin-right: 10px;
 }

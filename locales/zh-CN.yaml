@@ -33,7 +33,8 @@ menus:
   hsshop: 商店
   hsitemdetail: 商品详情
   hsmyshop: 我的秒杀
-  hsbought: 购买到的理财
+  hsmyorder: 购买到的理财
+  hsmyorderdetail: 我的理财详情
   hsinfo: 我的信息
   hsshoplist: 商品列表
   hsadmin: 管理

@@ -16,6 +16,7 @@ interface item {
   detail: string;
   beginDate: number;
   endDate: number;
+  totalstock: number;
 }
 
 let items = ref([]);
@@ -59,6 +60,13 @@ function toDetail(ItemId: number, ItemName: string) {
   });
   router.push({ name: "itemDetail", query: { id: String(ItemId) } });
 }
+let outofTime = (t1: number, t2: number) => {
+  let t = new Date();
+  if (t.valueOf() / 1000 >= t1 && t.valueOf() / 1000 <= t2) {
+    return false;
+  }
+  return true;
+};
 </script>
 <template>
   <div class="list">
@@ -90,16 +98,36 @@ function toDetail(ItemId: number, ItemName: string) {
           :header="item.name"
           @click="toDetail(item.id, item.name)"
           class="item"
+          :class="{ disabled: outofTime(item.beginDate, item.endDate) }"
         >
           <div>{{ item.description }}</div>
           <div>
-            <p>存货:{{ item.stock }}</p>
+            <p>抢购进度:</p>
+            <el-progress
+              :percentage="
+                Math.floor(
+                  ((item.totalstock - item.stock) / item.totalstock) * 100
+                )
+              "
+              >{{ item.totalstock - item.stock }}/{{
+                item.totalstock
+              }}</el-progress
+            >
           </div>
-          <div>秒杀开始时间:{{ FormattTime(item.beginDate) }}</div>
+          <div>
+            秒杀时间:<br />
+            开始:{{ FormattTime(item.beginDate) }} <br />
+            结束:{{ FormattTime(item.endDate) }}
+          </div>
         </el-card>
       </el-col>
     </el-row>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.disabled {
+  filter: grayscale(100%);
+  background-color: #dfe4ea;
+}
+</style>

@@ -4,7 +4,7 @@ const Layout = () => import("/@/layout/index.vue");
 const myshopRouter = {
   path: "/myshop",
   component: Layout,
-  redirect: "/myshop/info",
+  redirect: "/myshop/myinfo",
   meta: {
     icon: "fa-user",
     title: $t("menus.hsmyshop"),
@@ -14,7 +14,7 @@ const myshopRouter = {
   children: [
     {
       path: "/myshop/info",
-      name: "info",
+      name: "myinfo",
       component: () => import("/@/views/myshop/info.vue"),
       meta: {
         title: $t("menus.hsinfo"),
@@ -22,12 +22,22 @@ const myshopRouter = {
       }
     },
     {
-      path: "/myshop/bought",
-      component: () => import("/@/views/myshop/bought.vue"),
-      name: "bought",
+      path: "/myshop/order",
+      component: () => import("../../views/myshop/order.vue"),
+      name: "myorder",
       meta: {
-        title: $t("menus.hsbought"),
+        title: $t("menus.hsmyorder"),
         i18n: true
+      }
+    },
+    {
+      path: "/myshop/orderdetail",
+      component: () => import("../../views/myshop/orderdetail.vue"),
+      name: "myorderdetail",
+      meta: {
+        title: $t("menus.hsmyorderdetail"),
+        i18n: true,
+        showLink: false
       }
     }
   ]
