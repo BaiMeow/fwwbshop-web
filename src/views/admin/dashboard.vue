@@ -6,11 +6,11 @@ let bankbalance = ref(0);
 onMounted(() => {
   http
     .get("/api/admin/bankbalance")
-    .then((resp: number) => {
-      bankbalance.value = resp;
+    .then(({ data }) => {
+      bankbalance.value = data;
     })
     .catch((err: any) => {
-      errorMessage(err.respone.data);
+      errorMessage(err.response.data.message);
     });
 });
 </script>

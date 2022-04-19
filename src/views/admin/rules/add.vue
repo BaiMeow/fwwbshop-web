@@ -114,11 +114,11 @@ const add = () => {
   console.log(requestData);
   http
     .post("/api/admin/rule/add", { data: requestData }, requestConfig)
-    .then(resp => {
-      successMessage(resp.toString());
+    .then(({ data }) => {
+      successMessage(data);
     })
     .catch(err => {
-      errorMessage(err.toString());
+      errorMessage(err.response.data.message);
     });
 };
 </script>

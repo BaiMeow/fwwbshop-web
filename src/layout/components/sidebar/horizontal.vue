@@ -12,6 +12,7 @@ import { deviceDetection } from "/@/utils/deviceDetection";
 import { watch, nextTick, onMounted, getCurrentInstance } from "vue";
 import { usePermissionStoreHook } from "/@/store/modules/permission";
 import globalization from "/@/assets/svg/globalization.svg?component";
+import iconlogo from "/@/assets/login/avatar.png";
 
 const route = useRoute();
 const { locale, t } = useI18n();
@@ -69,7 +70,7 @@ function translationEn() {
 <template>
   <div class="horizontal-header">
     <div class="horizontal-header-left" @click="backHome">
-      <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+      <img :src="iconlogo" style="width: 35px; height: 35px" />
       <h4>{{ title }}</h4>
     </div>
     <el-menu

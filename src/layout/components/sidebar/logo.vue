@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getCurrentInstance } from "vue";
+import iconlogo from "/@/assets/login/avatar.png";
 const props = defineProps({
   collapse: Boolean
 });
@@ -18,7 +19,10 @@ const title =
         class="sidebar-logo-link"
         to="/"
       >
-        <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+        <img
+          :src="iconlogo"
+          style="width: 35px; height: 35px; margin-top: 5px"
+        />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
       <router-link
@@ -28,7 +32,10 @@ const title =
         class="sidebar-logo-link"
         to="/"
       >
-        <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+        <img
+          :src="iconlogo"
+          style="width: 35px; height: 35px; margin-top: 5px"
+        />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
     </transition>

@@ -15,7 +15,8 @@ let good = ref({
   beginDate: 0,
   endDate: 0,
   rule_age: 1,
-  rule_income: 1
+  rule_income: 1,
+  purlimnum: 1
 });
 let rules = ref([
   {
@@ -38,24 +39,24 @@ onMounted(() => {
   } else {
     http
       .get("/api/shop/item?id=" + id)
-      .then((resp: any) => {
-        good.value = resp;
+      .then(({ data }) => {
+        good.value = data;
         good.value.beginDate *= 1000;
         good.value.endDate *= 1000;
       })
       .catch(err => {
-        errorMessage(err.toString());
+        errorMessage(err.response.data.message);
       });
   }
   rules.value.forEach(rule => {
     rule.children = [];
     http
       .get("/api/admin/rule/list", { params: { type: rule.name } })
-      .then((resp: Array<any>) => {
-        rule.children = resp;
+      .then(({ data }) => {
+        rule.children = data;
       })
       .catch(err => {
-        errorMessage(err.respone.data);
+        errorMessage(err.response.data.message);
       });
     rule.chosen = good.value["rule_" + rule.name];
   });
@@ -75,7 +76,8 @@ const submit = () => {
     description: good.value.description,
     detail: good.value.detail,
     beginDate: Math.floor(good.value.beginDate / 1000).toString(),
-    endDate: Math.floor(good.value.endDate / 1000).toString()
+    endDate: Math.floor(good.value.endDate / 1000).toString(),
+    purlimnum: good.value.purlimnum.toString()
   });
   rules.value.forEach(rule => {
     params.append("rule_" + rule.name, rule.chosen + "");
@@ -88,11 +90,11 @@ const submit = () => {
   }
   http
     .post(path, { data: params.toString() })
-    .then((msg: string) => {
-      successMessage(msg);
+    .then(({ message }) => {
+      successMessage(message);
     })
     .catch(err => {
-      errorMessage(err.toString());
+      errorMessage(err.response.data.message);
     });
 };
 </script>
@@ -113,6 +115,9 @@ const submit = () => {
           <el-input v-model="good.price">
             <template #prepend>￥</template>
           </el-input>
+        </el-form-item>
+        <el-form-item label="限购数量">
+          <el-input v-model="good.purlimnum" />
         </el-form-item>
         <el-form-item label="理财简述">
           <el-input

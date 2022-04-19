@@ -23,9 +23,9 @@ const addrule = () => {
   router.push({ name: "ruleadd" });
 };
 let form = ref([]);
-http.get("/api/admin/rule/list").then((resp: Array<any>) => {
+http.get("/api/admin/rule/list").then(({ data }) => {
   form.value = [];
-  for (var rule of resp) {
+  for (var rule of data) {
     form.value.push({
       id: rule.id,
       name: rule.name,

@@ -2,21 +2,13 @@
 import { http } from "/@/utils/http";
 import { useRoute } from "vue-router";
 import { ref, computed } from "vue";
-interface order {
-  date: number;
-  order_number: number;
-  name: string;
-  price: number;
-  itemId: number;
-  count: number;
-}
 const route = useRoute();
 const order_number = route.query?.order_number;
 let ord: any = ref({});
 http
   .get("/api/dashboard/order?order_number=" + order_number)
-  .then((resp: order) => {
-    ord.value = resp;
+  .then(({ data }) => {
+    ord.value = data;
   });
 let buyTime = computed(() => {
   var t = new Date(ord.value.date * 1000);

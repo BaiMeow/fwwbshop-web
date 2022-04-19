@@ -3,26 +3,6 @@ import { http } from "/@/utils/http";
 import { ref, computed } from "vue";
 import { errorMessage } from "/@/utils/message";
 
-interface item {
-  price: number;
-  id: number;
-  name: string;
-  stock: number;
-  description: string;
-  detail: string;
-  beginDate: number;
-  endDate: number;
-}
-
-interface order {
-  id: number;
-  date: string;
-  order_number: string;
-  order_id: number;
-  buyer_id: number;
-  item_id: string;
-  item_quantity: number;
-}
 let orders = ref([]);
 let itemlist = ref([]);
 let selectedItem = ref();
@@ -45,19 +25,19 @@ let form = computed(() => {
 let timerange = ref([]);
 http
   .get("/api/admin/orderlist")
-  .then((resp: Array<order>) => {
-    orders.value = resp;
+  .then(({ data }) => {
+    orders.value = data;
   })
   .catch(err => {
-    errorMessage(err.toString());
+    errorMessage(err.response.data.message);
   });
 http
   .get("/api/shop/itemlist")
-  .then((resp: Array<item>) => {
-    itemlist.value = resp;
+  .then(({ data }) => {
+    itemlist.value = data;
   })
   .catch(err => {
-    errorMessage(err.toString());
+    errorMessage(err.response.data.message);
   });
 function getItem(id: number) {
   for (let it of itemlist.value) {
@@ -80,11 +60,11 @@ const query = () => {
     .get("/api/admin/orderlist", {
       params: params
     })
-    .then((resp: Array<order>) => {
-      orders.value = resp;
+    .then(({ data }) => {
+      orders.value = data;
     })
     .catch(err => {
-      errorMessage("查询失败：" + err.toString());
+      errorMessage("查询失败：" + err.response.data.message);
     });
 };
 function OrderDetail() {

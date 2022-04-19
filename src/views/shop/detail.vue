@@ -22,8 +22,8 @@ let good = ref({
 });
 let TimeOfShop = ref("");
 
-http.get("/api/shop/item?id=" + id).then((resp: any) => {
-  good.value = resp;
+http.get("/api/shop/item?id=" + id).then(({ data }) => {
+  good.value = data;
 });
 setInterval(() => {
   let t = new Date();
@@ -41,23 +41,32 @@ setInterval(() => {
 function buy() {
   http
     .get("/api/shop/item/getUrl?id=" + id)
-    .then(({ md5 }) => {
-      http
-        .post("/api/shop/item/execution/", { params: { md5: md5 } })
-        .then((resp: string) => {
-          successMessage(resp);
-        })
-        .catch(error => {
-          errorMessage("秒杀失败:" + error.response.data);
-          return;
-        });
-    })
-    .catch(error => {
-      errorMessage("秒杀失败:" + error.response.data);
-      if (error.response.status == 520) {
+    .then(({ data, status, message }) => {
+      if (status == 200) {
+        http
+          .post("/api/shop/item/execution/", { params: { md5: data.md5 } })
+          .then(({ data, status, message }) => {
+            if (status != 200) {
+              errorMessage("秒杀失败" + message);
+              return;
+            }
+            successMessage(data);
+          })
+          .catch(error => {
+            errorMessage("秒杀失败:" + error.response.data.message);
+            return;
+          });
+      } else if (status == 520) {
+        errorMessage("秒杀失败:" + message);
         router.push("/myshop/info");
+      } else {
+        errorMessage("秒杀失败:" + message);
       }
     });
+  //刷新商品
+  http.get("/api/shop/item?id=" + id).then(({ data }) => {
+    good.value = data;
+  });
 }
 let disabled = computed(() => {
   let t = new Date();
@@ -84,6 +93,7 @@ let disabled = computed(() => {
       >
         {{ good.totalstock - good.stock }} / {{ good.totalstock }}
       </el-progress>
+      <div>理财单价：{{ good.price }}</div>
       <div v-html="good.detail" />
       <div>
         秒杀时间:{{ FormatTime(good.beginDate) }} -

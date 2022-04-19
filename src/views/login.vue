@@ -3,32 +3,29 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { addClass, removeClass } from "/@/utils/operate";
 import bg from "/@/assets/login/bg.png";
-import avatar from "/@/assets/login/avatar.svg?component";
+import avatar from "/@/assets/login/avatar.png";
 import illustration from "/@/assets/login/illustration.svg?component";
 import { getLogin } from "../api/user";
 import { successMessage, errorMessage, warnMessage } from "/@/utils/message";
 import { initRouter } from "/@/router/utils";
 import { storageSession } from "/@/utils/storage";
 import { http } from "/@/utils/http";
-import Cookies from "js-cookie";
 const router = useRouter();
 
 let phone_num = ref("");
 let pwd = ref("");
 let isAdmin = ref(false);
 
-let loginHandler = ({ msg, name, status, token }) => {
-  if (status == 0) {
+let loginHandler = ({ message, data, status }) => {
+  if (status == 200) {
     successMessage("登陆成功");
-    Cookies.set("token", token);
     storageSession.setItem("info", {
-      username: name,
-      accessToken: token
+      username: data
     });
     initRouter().then(() => {});
     router.push("/");
   } else {
-    warnMessage("登陆失败" + msg);
+    warnMessage("登陆失败" + message);
   }
 };
 
@@ -42,21 +39,20 @@ const onLogin = (): void => {
     let params = new URLSearchParams();
     params.append("phone_num", phone_num.value);
     params.append("password", pwd.value);
-    params.append("isAdmin", "false");
     http
-      .post("/api/login/admin", {
+      .post("/api/loginadmin", {
         data: params.toString()
       })
       .then(loginHandler)
       .catch(err => {
-        errorMessage(err.toString());
+        errorMessage(err.response.data.message);
       });
   } else {
     //用户登陆
     getLogin({ phone_num: phone_num.value, password: pwd.value })
       .then(loginHandler)
-      .catch(err => {
-        errorMessage(err.toString());
+      .catch(error => {
+        errorMessage(error.response.data.message);
       });
   }
 };
@@ -88,7 +84,7 @@ function onPwdBlur() {
     </div>
     <div class="login-box">
       <div class="login-form">
-        <avatar class="avatar" />
+        <img :src="avatar" class="avatar" />
         <h2
           v-motion
           :initial="{

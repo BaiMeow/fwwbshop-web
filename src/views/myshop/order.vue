@@ -17,8 +17,8 @@ interface order {
 }
 let orders = ref([]);
 let form = ref([]);
-http.get("/api/dashboard/orderlist").then((resp: Array<order>) => {
-  orders.value = resp;
+http.get("/api/dashboard/orderlist").then(({ data }) => {
+  orders.value = data;
   form.value = [];
   orders.value.forEach((ord: order) => {
     let t = new Date(ord.date * 1000);

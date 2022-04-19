@@ -17,7 +17,7 @@ export const getLogin = ({ phone_num, password }) => {
     phone_num: phone_num,
     password: password
   });
-  return http.request("post", "/api/login", { data: params.toString() });
+  return http.request("post", "/api/loginuser", { data: params.toString() });
 };
 
 // 刷新token

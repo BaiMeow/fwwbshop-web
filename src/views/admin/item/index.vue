@@ -10,7 +10,7 @@ const router = useRouter();
 const route = useRoute();
 
 let form = ref([]);
-let data: Array<item> = [];
+let items: Array<item> = [];
 interface tablerow {
   id: number;
   name: string;
@@ -22,10 +22,10 @@ interface tablerow {
 onMounted(() => {
   http
     .get("/api/shop/itemlist")
-    .then((resp: Array<item>) => {
-      data = resp;
+    .then(({ data }) => {
+      items = data;
       form.value = [];
-      resp.forEach(item => {
+      data.forEach(item => {
         let tablerow: tablerow = {
           id: item.id,
           name: item.name,
@@ -38,7 +38,7 @@ onMounted(() => {
       });
     })
     .catch(err => {
-      errorMessage(err.toString());
+      errorMessage(err.response.data.message);
     });
 });
 
@@ -68,7 +68,7 @@ const editItem = (item: item, newItem: boolean) => {
   router.push({ name: "itemedit", query: { id: String(id) } });
 };
 function getItembyId(id: number) {
-  for (var it of data) {
+  for (var it of items) {
     if (it.id != id) {
       continue;
     }

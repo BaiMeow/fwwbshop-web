@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { addClass, removeClass } from "/@/utils/operate";
 import bg from "/@/assets/login/bg.png";
-import avatar from "/@/assets/login/avatar.svg?component";
+import avatar from "/@/assets/login/avatar.png";
 import illustration from "/@/assets/login/illustration.svg?component";
 import { http } from "/@/utils/http";
 import { errorMessage, successMessage } from "../utils/message";
@@ -28,7 +28,7 @@ const onRegister = (): void => {
       router.push("/login");
     })
     .catch(err => {
-      errorMessage(err.toString());
+      errorMessage(err.response.data.message);
     });
 };
 
@@ -42,7 +42,7 @@ function onUserBlur() {
 }
 
 function onIdCardFocus() {
-  addClass(document.querySelector(".id_card"), "focus");
+  addClass(document.querySelector(".id-card"), "focus");
 }
 
 function onIdCardBlur() {
@@ -77,7 +77,7 @@ function onPhoneBlur() {
     </div>
     <div class="login-box">
       <div class="login-form">
-        <avatar class="avatar" />
+        <img :src="avatar" class="avatar" />
         <h2
           v-motion
           :initial="{

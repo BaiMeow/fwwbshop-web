@@ -33,11 +33,13 @@
 
 .login-form {
   width: 360px;
+  display: grid;
 }
 
 .avatar {
-  width: 350px;
-  height: 80px;
+  width: 125px;
+  height: 125px;
+  justify-self: center;
 }
 
 .login-form h2 {
@@ -200,8 +202,8 @@ a:hover {
     width: 360px;
   }
   .avatar {
-    width: 280px;
-    height: 80px;
+    width: 125px;
+    height: 125px;
   }
 }
 

@@ -7,24 +7,12 @@ import { ref } from "vue";
 const router = useRouter();
 const route = useRoute();
 
-interface item {
-  price: number;
-  id: number;
-  name: string;
-  stock: number;
-  description: string;
-  detail: string;
-  beginDate: number;
-  endDate: number;
-  totalstock: number;
-}
-
 let items = ref([]);
 
 http
   .get("/api/shop/itemlist")
-  .then((resp: Array<item>) => {
-    items.value = resp;
+  .then(({ data }) => {
+    items.value = data;
   })
   .catch(function (error) {
     ElNotification({

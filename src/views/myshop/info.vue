@@ -12,18 +12,18 @@ let working_status = ref(0);
 let balance = ref(0);
 http
   .get("/api/user/information")
-  .then((resp: any) => {
-    name.value = resp.name;
-    phone.value = resp.phone_num;
-    age.value = resp.age;
-    id_card.value = resp.id_card;
-    income.value = resp.income;
-    defaulter.value = resp.defaulter;
-    working_status.value = resp.working_status;
-    balance.value = resp.balance;
+  .then(({ data }) => {
+    name.value = data.name;
+    phone.value = data.phone_num;
+    age.value = data.age;
+    id_card.value = data.id_card;
+    income.value = data.income;
+    defaulter.value = data.defaulter;
+    working_status.value = data.working_status;
+    balance.value = data.balance;
   })
   .catch(err => {
-    errorMessage(err.toString());
+    errorMessage(err.response.data.message);
   });
 const submit = () => {
   let params = new URLSearchParams();
@@ -34,15 +34,15 @@ const submit = () => {
     .post("/api/user/completeInfo", {
       data: params.toString()
     })
-    .then(({ status, msg }: { status: number; msg: string }) => {
-      if (status == 0) {
-        successMessage("修改成功:" + msg);
+    .then(({ status, message }) => {
+      if (status == 200) {
+        successMessage("修改成功:" + message);
       } else {
-        errorMessage("修改失败:" + msg);
+        errorMessage("修改失败:" + message);
       }
     })
     .catch(err => {
-      errorMessage(err.toString());
+      errorMessage(err.response.data.message);
     });
 };
 let Formatdefaulter = computed(() => {
@@ -110,7 +110,11 @@ let Formatdefaulter = computed(() => {
               label="失业"
           /></el-select>
         </el-descriptions-item>
-      </el-descriptions>
+        <el-descriptions-item>
+          <template #label>账户余额</template>
+          {{ balance }}</el-descriptions-item
+        ></el-descriptions
+      >
       <el-button @click="submit" style="margin-top: 20px" type="primary"
         >提交更改</el-button
       >
